@@ -8,21 +8,32 @@
   <div class="flex justify-end gap-2">
     <form [formGroup]="settingsForm" (ngSubmit)="onSubmit()">
       <div class="flex items-center gap-4 mb-4">
-        <label for="taskname" class="font-semibold w-24">Block Duration</label>
-        <input pInputText id="taskname" class="flex-auto" autocomplete="off" />
+        <label for="blockDuration" class="font-semibold w-24">Block Duration</label>
+
+        <input
+          pInputText
+          formControlName="timeBlockDuration"
+          id="blockDuration"
+          class="flex-auto"
+          autocomplete="off"
+          placeholder="Default: 5 minutes"
+        />
       </div>
       <div class="flex items-center gap-4 mb-4">
-        <label for="taskname" class="font-semibold w-24">Focus Goal</label>
-        <input pInputText id="taskname" class="flex-auto" autocomplete="off" />
+        <label for="goal" class="font-semibold w-24">Focus Goal</label>
+        <input
+          pInputText
+          formControlName="focusDurationGoal"
+          id="goal"
+          class="flex-auto"
+          autocomplete="off"
+          placeholder="In hours"
+        />
       </div>
 
       <div class="flex justify-end gap-2">
         <p-button label="Cancel" severity="secondary" (click)="dialogService.closeDialog()" />
-        <p-button
-          label="Save Task"
-          (click)="dialogService.closeDialog()"
-          [disabled]="settingsForm.invalid"
-        />
+        <p-button label="Save Task" type="submit" [disabled]="settingsForm.invalid" />
       </div>
     </form>
   </div>

@@ -1,4 +1,4 @@
-import { Component, computed, effect, inject, OnDestroy, signal } from '@angular/core';
+import { Component, computed, effect, inject, OnDestroy, OnInit, signal } from '@angular/core';
 import { Dialog } from 'primeng/dialog';
 import { ButtonModule } from 'primeng/button';
 import { InputTextModule } from 'primeng/inputtext';
@@ -31,10 +31,11 @@ import { Subscription } from 'rxjs';
   templateUrl: './settings-dialog.html',
   styleUrl: './settings-dialog.scss',
 })
-export class SettingsDialog implements OnDestroy {
+export class SettingsDialog implements OnDestroy, OnInit {
   visible: boolean = false;
   dialogService = inject(DialogService);
   subscriptions = new Subscription();
+  settingsService = inject(SettingsService);
 
   settingsForm = new FormGroup({
     timeBlockDuration: new FormControl('', [Validators.required]),
@@ -51,7 +52,20 @@ export class SettingsDialog implements OnDestroy {
     );
   }
 
-  onSubmit() {}
+  ngOnInit(): void {
+    const settings = this.settingsService.fetchSettings();
+    if (settings) {
+      this.settingsForm.patchValue(settings);
+    }
+  }
+
+  onSubmit() {
+    if (this.settingsForm.invalid) return;
+    console.log('submit', this.settingsForm.value);
+
+    this.settingsService.saveSettings(this.settingsForm.value);
+    this.dialogService.closeDialog();
+  }
 
   ngOnDestroy(): void {
     this.subscriptions.unsubscribe();

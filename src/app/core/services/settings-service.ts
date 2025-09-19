@@ -16,4 +16,11 @@ export class SettingsService {
       localStorage.setItem('settings', JSON.stringify(settings));
     }
   }
+
+  fetchSettings() {
+    if (isPlatformBrowser(this.platformId)) {
+      const settings = localStorage.getItem('settings');
+      return settings ? JSON.parse(settings) : null;
+    }
+  }
 }
