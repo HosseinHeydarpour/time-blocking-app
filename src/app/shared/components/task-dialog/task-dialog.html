@@ -1,11 +1,10 @@
 <p-dialog
-  header="Edit Profile"
+  header="Create a Task"
   [modal]="true"
-  [visible]="visible()"
-  [hidden]="!visible()"
-  [style]="{ width: '25rem' }"
+  [(visible)]="visible"
+  [style]="{ maxWidth: '30rem' }"
+  [dismissableMask]="true"
 >
-  <span class="p-text-secondary block mb-8">Please add a task.</span>
   <form [formGroup]="taskForm" (ngSubmit)="onSubmit()">
     <div class="flex items-center gap-4 mb-4">
       <label for="taskname" class="font-semibold w-24">Task Title</label>
@@ -43,7 +42,11 @@
 
     <div class="flex justify-end gap-2">
       <p-button label="Cancel" severity="secondary" (click)="dialogService.closeDialog()" />
-      <p-button label="Save Task" (click)="dialogService.closeDialog()" />
+      <p-button
+        label="Save Task"
+        (click)="dialogService.closeDialog()"
+        [disabled]="taskForm.invalid"
+      />
     </div>
   </form>
 </p-dialog>

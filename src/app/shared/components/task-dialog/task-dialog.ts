@@ -1,4 +1,4 @@
-import { Component, computed, inject } from '@angular/core';
+import { Component, computed, effect, inject, signal } from '@angular/core';
 import { Dialog } from 'primeng/dialog';
 import { ButtonModule } from 'primeng/button';
 import { InputTextModule } from 'primeng/inputtext';
@@ -15,6 +15,7 @@ import { title } from 'process';
 import { ITaskForm } from '../../../core/models/task.model';
 import { DatePickerModule } from 'primeng/datepicker';
 import { CommonModule } from '@angular/common';
+import { sign } from 'crypto';
 
 @Component({
   selector: 'app-task-dialog',
@@ -31,7 +32,7 @@ import { CommonModule } from '@angular/common';
 })
 export class TaskDialog {
   dialogService = inject(DialogService);
-  visible = computed(() => this.dialogService.visible());
+  visible: boolean = false;
   taskForm: FormGroup<ITaskForm>;
 
   constructor() {
@@ -47,6 +48,9 @@ export class TaskDialog {
       allDay: new FormControl(false, { nonNullable: true }),
       description: new FormControl('', { nonNullable: true, validators: Validators.required }),
       location: new FormControl('', { nonNullable: true, validators: Validators.required }),
+    });
+    this.dialogService.visible$.subscribe((visible) => {
+      this.visible = visible;
     });
   }
 

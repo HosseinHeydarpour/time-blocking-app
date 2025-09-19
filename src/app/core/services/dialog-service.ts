@@ -1,16 +1,19 @@
 import { Injectable, signal } from '@angular/core';
+import { toObservable } from '@angular/core/rxjs-interop';
+import { Subject } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
 })
 export class DialogService {
-  visible = signal(false);
+  // Convert the signal to an Observable
+  visible$ = new Subject<boolean>();
 
   openDialog() {
-    this.visible.set(true);
+    this.visible$.next(true);
   }
 
   closeDialog() {
-    this.visible.set(false);
+    this.visible$.next(false);
   }
 }
