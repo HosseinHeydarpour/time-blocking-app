@@ -20,7 +20,7 @@ export class SettingsService {
   fetchSettings() {
     if (isPlatformBrowser(this.platformId)) {
       const settings = localStorage.getItem('settings');
-      return settings ? JSON.parse(settings) : null;
+      return settings ? JSON.parse(settings) : { focusDurationGoal: 8, timeBlockDuration: 5 };
     }
   }
 }
