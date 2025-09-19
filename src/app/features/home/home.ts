@@ -1,5 +1,6 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, computed, effect, inject } from '@angular/core';
+import { EventService } from '../../core/services/event-service';
 
 @Component({
   selector: 'app-home',
@@ -9,4 +10,9 @@ import { Component } from '@angular/core';
 })
 export class Home {
   today = new Date();
+  eventService = inject(EventService);
+
+  eventsList = computed(() => this.eventService.events());
+
+  constructor() {}
 }
