@@ -3,16 +3,8 @@ import { Dialog } from 'primeng/dialog';
 import { ButtonModule } from 'primeng/button';
 import { InputTextModule } from 'primeng/inputtext';
 import { DialogService } from '../../../core/services/dialog-service';
-import {
-  AbstractControl,
-  FormControl,
-  FormGroup,
-  ReactiveFormsModule,
-  ValidationErrors,
-  Validators,
-} from '@angular/forms';
-
-import { ITaskForm } from '../../../core/models/task.model';
+import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { PrimeIcons } from 'primeng/api';
 import { DatePickerModule } from 'primeng/datepicker';
 import { CommonModule } from '@angular/common';
 import { SettingsService } from '../../../core/services/settings-service';
@@ -40,6 +32,8 @@ export class SettingsDialog implements OnDestroy, OnInit {
   settingsForm = new FormGroup({
     timeBlockDuration: new FormControl('', [Validators.required]),
     focusDurationGoal: new FormControl('', [Validators.required]),
+    startAt: new FormControl('', [Validators.required]),
+    endAt: new FormControl('', [Validators.required]),
   });
 
   constructor() {
