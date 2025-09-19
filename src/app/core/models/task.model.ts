@@ -11,6 +11,5 @@ export interface ITask {
 export interface ITaskForm {
   title: FormControl<string>;
   duration: FormControl<Date>;
-
   description: FormControl<string>;
 }

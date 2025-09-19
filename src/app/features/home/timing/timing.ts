@@ -2,10 +2,12 @@ import { Component, inject, OnDestroy, OnInit } from '@angular/core';
 import { SettingsService } from '../../../core/services/settings-service';
 import { Subscription } from 'rxjs';
 import { CLIENT_RENEG_LIMIT } from 'tls';
+import { TaskService } from '../../../core/services/task-service';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-timing',
-  imports: [],
+  imports: [CommonModule],
   templateUrl: './timing.html',
   styleUrl: './timing.scss',
 })
@@ -13,6 +15,7 @@ export class Timing implements OnInit, OnDestroy {
   settingsService = inject(SettingsService);
   settings: any;
   subscriptions: Subscription = new Subscription();
+  taskService = inject(TaskService);
 
   constructor() {}
   ngOnInit(): void {

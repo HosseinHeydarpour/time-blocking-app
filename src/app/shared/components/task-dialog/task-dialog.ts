@@ -16,6 +16,8 @@ import { ITaskForm } from '../../../core/models/task.model';
 import { DatePickerModule } from 'primeng/datepicker';
 import { CommonModule } from '@angular/common';
 import { TaskService } from '../../../core/services/task-service';
+import { Subscription } from 'rxjs';
+import { SettingsService } from '../../../core/services/settings-service';
 
 @Component({
   selector: 'app-task-dialog',
@@ -35,15 +37,21 @@ export class TaskDialog {
   tasksService = inject(TaskService);
   visible: boolean = false;
   taskForm: FormGroup<ITaskForm>;
+  subscriptions = new Subscription();
+  settingsService = inject(SettingsService);
+  settings: any;
+  step!: number;
 
   constructor() {
     const now = new Date();
     now.setHours(0, 0, 0, 0);
+    this.settings = this.settingsService.fetchSettings();
+    this.step = this.settings.timeBlockDuration * 1;
     this.taskForm = new FormGroup<ITaskForm>({
       title: new FormControl('', { nonNullable: true, validators: Validators.required }),
       duration: new FormControl(now, {
         nonNullable: true,
-        validators: [Validators.required, this.minutesMultipleOf5Validator],
+        validators: [Validators.required, this.minutesMultipleOfStepValidator(this.step)],
       }),
       description: new FormControl('', { nonNullable: true, validators: Validators.required }),
     });
@@ -52,11 +60,24 @@ export class TaskDialog {
         this.visible = visible.isVisible;
       }
     });
+
+    this.subscriptions.add(
+      this.settingsService.settings$.subscribe((settings) => {
+        this.settings = settings;
+        this.step = this.settings.timeBlockDuration * 1;
+
+        const durationControl = this.taskForm.get('duration');
+        if (durationControl) {
+          durationControl.setValidators([this.minutesMultipleOfStepValidator(this.step)]);
+          durationControl.updateValueAndValidity();
+        }
+      })
+    );
   }
 
   onSubmit() {
     if (this.taskForm.invalid) return;
-    console.log(this.taskForm);
+
     this.tasksService.addTask({
       id: this.tasksService.tasks().length + 1 + '',
       title: this.taskForm.value.title as string,
@@ -66,11 +87,13 @@ export class TaskDialog {
     this.dialogService.closeDialog();
   }
 
-  minutesMultipleOf5Validator(control: AbstractControl): ValidationErrors | null {
-    const value: Date = control.value;
-    if (!value) return null;
+  minutesMultipleOfStepValidator(step: number) {
+    return (control: AbstractControl): ValidationErrors | null => {
+      const value: Date = control.value;
+      if (!value) return null;
 
-    const minutes = value.getMinutes();
-    return minutes % 5 === 0 ? null : { notMultipleOf5: true };
+      const minutes = value.getMinutes();
+      return minutes % step === 0 ? null : { notMultipleOfStep: true };
+    };
   }
 }

@@ -14,4 +14,8 @@ export class TaskService {
   deleteEvent(task: ITask) {
     this.tasks.update((tasks) => tasks.filter((t) => t.id !== task.id));
   }
+
+  durationToMinutes(duration: Date): number {
+    return duration.getHours() * 60 + duration.getMinutes();
+  }
 }

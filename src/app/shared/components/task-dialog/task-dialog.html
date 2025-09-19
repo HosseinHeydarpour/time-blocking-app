@@ -24,7 +24,7 @@
         [showIcon]="true"
         [timeOnly]="true"
         inputId="templatedisplay"
-        [stepMinute]="5"
+        [stepMinute]="step"
         [hourFormat]="'24'"
         [readonlyInput]="true"
       >
@@ -33,8 +33,11 @@
         </ng-template>
       </p-datepicker>
 
-      <div *ngIf="taskForm.get('duration')?.errors?.['notMultipleOf5']" class="text-red-500 mt-1">
-        Minutes must be divisible by 5
+      <div
+        *ngIf="taskForm.get('duration')?.errors?.['notMultipleOfStep']"
+        class="text-red-500 mt-1"
+      >
+        Minutes must be divisible by {{ step }}
       </div>
     </div>
     <div class="flex items-center gap-4 mb-8">
