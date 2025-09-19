@@ -15,6 +15,7 @@ import {
 import { ITaskForm } from '../../../core/models/task.model';
 import { DatePickerModule } from 'primeng/datepicker';
 import { CommonModule } from '@angular/common';
+import { TaskService } from '../../../core/services/task-service';
 
 @Component({
   selector: 'app-task-dialog',
@@ -31,6 +32,7 @@ import { CommonModule } from '@angular/common';
 })
 export class TaskDialog {
   dialogService = inject(DialogService);
+  tasksService = inject(TaskService);
   visible: boolean = false;
   taskForm: FormGroup<ITaskForm>;
 
@@ -44,9 +46,7 @@ export class TaskDialog {
         nonNullable: true,
         validators: [Validators.required, this.minutesMultipleOf5Validator],
       }),
-      allDay: new FormControl(false, { nonNullable: true }),
       description: new FormControl('', { nonNullable: true, validators: Validators.required }),
-      location: new FormControl('', { nonNullable: true, validators: Validators.required }),
     });
     this.dialogService.visible$.subscribe((visible) => {
       if (visible.type === 'task') {
@@ -55,7 +55,15 @@ export class TaskDialog {
     });
   }
 
-  onSubmit() {}
+  onSubmit() {
+    if (this.taskForm.invalid) return;
+    this.tasksService.addTask({
+      id: this.tasksService.tasks().length + 1 + '',
+      title: this.taskForm.value.title as string,
+      duration: this.taskForm.value.duration as Date,
+      description: this.taskForm.value.description as string,
+    });
+  }
 
   minutesMultipleOf5Validator(control: AbstractControl): ValidationErrors | null {
     const value: Date = control.value;

@@ -7,7 +7,7 @@ import { ITask } from '../models/task.model';
 export class TaskService {
   tasks = signal<ITask[]>([]);
 
-  addEvent(task: ITask) {
+  addTask(task: ITask) {
     this.tasks.update((tasks) => [...tasks, task]);
   }
 
