@@ -34,6 +34,7 @@
           pButton
           type="button"
           class="flex items-center justify-center p-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors duration-200"
+          (click)="settingsService.openDialog()"
         >
           <i class="icon-settings text-primary"></i>
         </button>
@@ -56,3 +57,4 @@
 </div>
 
 <app-task-dialog></app-task-dialog>
+<app-settings-dialog></app-settings-dialog>
