@@ -33,7 +33,7 @@ import { Subscription } from 'rxjs';
 })
 export class SettingsDialog implements OnDestroy {
   visible: boolean = false;
-  settingsService = inject(SettingsService);
+  dialogService = inject(DialogService);
   subscriptions = new Subscription();
 
   settingsForm = new FormGroup({
@@ -43,8 +43,10 @@ export class SettingsDialog implements OnDestroy {
 
   constructor() {
     this.subscriptions.add(
-      this.settingsService.visible$.subscribe((visible) => {
-        this.visible = visible;
+      this.dialogService.visible$.subscribe((visible) => {
+        if (visible.type === 'settings') {
+          this.visible = visible.isVisible;
+        }
       })
     );
   }

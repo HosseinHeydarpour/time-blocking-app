@@ -28,6 +28,6 @@ export class Home {
   constructor() {}
 
   showTaskDialog() {
-    this.dialogService.openDialog();
+    this.dialogService.openDialog('task');
   }
 }

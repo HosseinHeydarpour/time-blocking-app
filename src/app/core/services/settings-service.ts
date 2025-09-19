@@ -1,4 +1,5 @@
-import { Injectable } from '@angular/core';
+import { isPlatformBrowser } from '@angular/common';
+import { inject, Injectable, PLATFORM_ID } from '@angular/core';
 import { Subject } from 'rxjs';
 
 @Injectable({
@@ -6,13 +7,13 @@ import { Subject } from 'rxjs';
 })
 export class SettingsService {
   // Convert the signal to an Observable
-  visible$ = new Subject<boolean>();
 
-  openDialog() {
-    this.visible$.next(true);
-  }
+  private platformId = inject(PLATFORM_ID);
 
-  closeDialog() {
-    this.visible$.next(false);
+  saveSettings(settings: any) {
+    // Save settings logic here
+    if (isPlatformBrowser(this.platformId)) {
+      localStorage.setItem('settings', JSON.stringify(settings));
+    }
   }
 }

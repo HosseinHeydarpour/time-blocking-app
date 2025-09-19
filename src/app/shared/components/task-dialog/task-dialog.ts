@@ -49,7 +49,9 @@ export class TaskDialog {
       location: new FormControl('', { nonNullable: true, validators: Validators.required }),
     });
     this.dialogService.visible$.subscribe((visible) => {
-      this.visible = visible;
+      if (visible.type === 'task') {
+        this.visible = visible.isVisible;
+      }
     });
   }
 
