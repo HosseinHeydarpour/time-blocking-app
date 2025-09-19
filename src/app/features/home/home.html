@@ -9,9 +9,23 @@
         <span class="">{{ today | date : 'short' }}</span>
       </p>
 
-      <a class="bg-blue-50 p-1 rounded-full flex items-center justify-center hover:bg-blue-100">
-        <i class="icon-settings text-blue-700"></i>
-      </a>
+      <div class="flex items-center gap-2">
+        <a
+          class="bg-blue-50 p-1 rounded-full flex items-center justify-center hover:bg-blue-100"
+          (click)="themeService.toggleDarkMode()"
+        >
+          <i
+            class="text-blue-700"
+            [ngClass]="{
+              'icon-moon': isNightMode(),
+              'icon-sun': !isNightMode()
+            }"
+          ></i>
+        </a>
+        <a class="bg-blue-50 p-1 rounded-full flex items-center justify-center hover:bg-blue-100">
+          <i class="icon-settings text-blue-700"></i>
+        </a>
+      </div>
     </div>
 
     <!-- No event Scheduled message -->
