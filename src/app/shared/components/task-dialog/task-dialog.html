@@ -8,7 +8,13 @@
   <form [formGroup]="taskForm" (ngSubmit)="onSubmit()">
     <div class="flex items-center gap-4 mb-4">
       <label for="taskname" class="font-semibold w-24">Task Title</label>
-      <input pInputText id="taskname" class="flex-auto" autocomplete="off" />
+      <input
+        pInputText
+        formControlName="title"
+        id="taskname"
+        class="flex-auto"
+        autocomplete="off"
+      />
     </div>
     <div class="flex items-center gap-4 mb-8">
       <label for="description" class="font-semibold w-24">Duration</label>
@@ -33,16 +39,23 @@
     </div>
     <div class="flex items-center gap-4 mb-8">
       <label for="description" class="font-semibold w-24">Description</label>
-      <input pInputText id="description" class="flex-auto" autocomplete="off" />
+      <input
+        pInputText
+        id="description"
+        formControlName="description"
+        class="flex-auto"
+        autocomplete="off"
+      />
     </div>
 
     <div class="flex justify-end gap-2">
-      <p-button label="Cancel" severity="secondary" (click)="dialogService.closeDialog()" />
       <p-button
-        label="Save Task"
+        label="Cancel"
+        severity="secondary"
         (click)="dialogService.closeDialog()"
         [disabled]="taskForm.invalid"
       />
+      <p-button label="Save Task" (click)="dialogService.closeDialog()" />
     </div>
   </form>
 </p-dialog>

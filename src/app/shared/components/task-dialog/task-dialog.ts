@@ -40,7 +40,6 @@ export class TaskDialog {
     const now = new Date();
     now.setHours(0, 0, 0, 0);
     this.taskForm = new FormGroup<ITaskForm>({
-      id: new FormControl('', { nonNullable: true }),
       title: new FormControl('', { nonNullable: true, validators: Validators.required }),
       duration: new FormControl(now, {
         nonNullable: true,
@@ -56,6 +55,7 @@ export class TaskDialog {
   }
 
   onSubmit() {
+    console.log(this.taskForm);
     if (this.taskForm.invalid) return;
     this.tasksService.addTask({
       id: this.tasksService.tasks().length + 1 + '',

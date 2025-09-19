@@ -9,7 +9,6 @@ export interface ITask {
 }
 
 export interface ITaskForm {
-  id: FormControl<string>;
   title: FormControl<string>;
   duration: FormControl<Date>;
 
