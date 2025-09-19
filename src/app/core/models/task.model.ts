@@ -12,7 +12,7 @@ export interface ITask {
 export interface ITaskForm {
   id: FormControl<string>;
   title: FormControl<string>;
-  duration: FormControl<number>;
+  duration: FormControl<Date>;
   allDay: FormControl<boolean>;
   description: FormControl<string>;
   location: FormControl<string>;
