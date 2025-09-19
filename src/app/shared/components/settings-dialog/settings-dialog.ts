@@ -30,10 +30,16 @@ export class SettingsDialog implements OnDestroy, OnInit {
   settingsService = inject(SettingsService);
 
   settingsForm = new FormGroup({
-    timeBlockDuration: new FormControl('', [Validators.required]),
-    focusDurationGoal: new FormControl('', [Validators.required]),
-    startAt: new FormControl('', [Validators.required]),
-    endAt: new FormControl('', [Validators.required]),
+    timeBlockDuration: new FormControl<string>('', {
+      nonNullable: true,
+      validators: [Validators.required],
+    }),
+    focusDurationGoal: new FormControl<string>('', {
+      nonNullable: true,
+      validators: [Validators.required],
+    }),
+    startAt: new FormControl<string>('', { nonNullable: true, validators: [Validators.required] }),
+    endAt: new FormControl<string>('', { nonNullable: true, validators: [Validators.required] }),
   });
 
   constructor() {
@@ -55,12 +61,25 @@ export class SettingsDialog implements OnDestroy, OnInit {
 
   onSubmit() {
     if (this.settingsForm.invalid) return;
-    console.log('submit', this.settingsForm.value);
 
-    this.settingsService.saveSettings(this.settingsForm.value);
+    const formValue = { ...this.settingsForm.value };
+
+    const startAtValue = formValue.startAt;
+    const endAtValue = formValue.endAt;
+
+    if (startAtValue && endAtValue) {
+      formValue.startAt = this.formatTimeString(startAtValue);
+      formValue.endAt = this.formatTimeString(endAtValue);
+    }
+
+    this.settingsService.saveSettings(formValue);
     this.dialogService.closeDialog();
   }
 
+  private formatTimeString(time: string): string {
+    const [hours, minutes] = time.split(':').map(Number);
+    return `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}`;
+  }
   ngOnDestroy(): void {
     this.subscriptions.unsubscribe();
   }

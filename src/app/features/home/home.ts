@@ -6,10 +6,11 @@ import { TaskDialog } from '../../shared/components/task-dialog/task-dialog';
 import { ThemeService } from '../../core/services/theme-service';
 import { SettingsDialog } from '../../shared/components/settings-dialog/settings-dialog';
 import { SettingsService } from '../../core/services/settings-service';
+import { Timing } from './timing/timing';
 
 @Component({
   selector: 'app-home',
-  imports: [CommonModule, TaskDialog, SettingsDialog],
+  imports: [CommonModule, TaskDialog, SettingsDialog, Timing],
   templateUrl: './home.html',
   styleUrl: './home.scss',
 })

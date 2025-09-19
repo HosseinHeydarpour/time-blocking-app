@@ -10,6 +10,7 @@ import { SettingsService } from '../../../core/services/settings-service';
 export class Timing implements OnInit {
   settingsService = inject(SettingsService);
   settings: any;
+
   constructor() {}
   ngOnInit(): void {
     this.settings = this.settingsService.fetchSettings();
