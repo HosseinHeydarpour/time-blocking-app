@@ -18,11 +18,13 @@
     @if (eventsList.length === 0) {
 
     <div
-      class="bg-white rounded-lg border border-solid border-gray-100 shadow-sm py-4 px-4 flex items-center justify-center mt-4"
+      class="bg-white rounded-lg border border-solid border-gray-100 shadow-sm py-4 px-4 flex items-center justify-center mt-4 cursor-pointer"
+      (click)="showTaskDialog()"
     >
       <p class="text-gray-500 text-center">No events scheduled for today 😞 Click to add one!</p>
     </div>
-
     }
   </section>
 </div>
+
+<app-task-dialog></app-task-dialog>
