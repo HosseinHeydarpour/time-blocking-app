@@ -13,7 +13,24 @@
     </div>
     <div class="flex items-center gap-4 mb-8">
       <label for="description" class="font-semibold w-24">Duration</label>
-      <input pInputText id="description" class="flex-auto" autocomplete="off" />
+      <p-datepicker
+        formControlName="duration"
+        [iconDisplay]="'input'"
+        [showIcon]="true"
+        [timeOnly]="true"
+        inputId="templatedisplay"
+        [stepMinute]="5"
+        [hourFormat]="'24'"
+        [readonlyInput]="true"
+      >
+        <ng-template #inputicon let-clickCallBack="clickCallBack">
+          <i class="pi pi-clock" (click)="clickCallBack($event)"></i>
+        </ng-template>
+      </p-datepicker>
+
+      <div *ngIf="taskForm.get('duration')?.errors?.['notMultipleOf5']" class="text-red-500 mt-1">
+        Minutes must be divisible by 5
+      </div>
     </div>
     <div class="flex items-center gap-4 mb-8">
       <label for="description" class="font-semibold w-24">Description</label>

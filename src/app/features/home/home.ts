@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component, computed, effect, inject } from '@angular/core';
-import { EventService } from '../../core/services/event-service';
+import { TaskService } from '../../core/services/task-service';
 import { DialogService } from '../../core/services/dialog-service';
 import { TaskDialog } from '../../shared/components/task-dialog/task-dialog';
 import { ThemeService } from '../../core/services/theme-service';
@@ -13,12 +13,12 @@ import { ThemeService } from '../../core/services/theme-service';
 })
 export class Home {
   today = new Date();
-  eventService = inject(EventService);
+  taskService = inject(TaskService);
   dialogService = inject(DialogService);
   themeService = inject(ThemeService);
   isNightMode = computed(() => this.themeService.theme() === 'dark');
 
-  eventsList = computed(() => this.eventService.events());
+  tasksList = computed(() => this.taskService.tasks());
 
   constructor() {}
 
