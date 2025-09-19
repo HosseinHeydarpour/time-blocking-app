@@ -76,8 +76,10 @@ export class SettingsDialog implements OnDestroy, OnInit {
     this.dialogService.closeDialog();
   }
 
-  private formatTimeString(time: string): string {
-    const [hours, minutes] = time.split(':').map(Number);
+  private formatTimeString(time: Date | string): string {
+    if (typeof time === 'string') return time;
+    const hours = time.getHours();
+    const minutes = time.getMinutes();
     return `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}`;
   }
   ngOnDestroy(): void {

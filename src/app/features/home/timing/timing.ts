@@ -1,5 +1,7 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, inject, OnDestroy, OnInit } from '@angular/core';
 import { SettingsService } from '../../../core/services/settings-service';
+import { Subscription } from 'rxjs';
+import { CLIENT_RENEG_LIMIT } from 'tls';
 
 @Component({
   selector: 'app-timing',
@@ -7,13 +9,23 @@ import { SettingsService } from '../../../core/services/settings-service';
   templateUrl: './timing.html',
   styleUrl: './timing.scss',
 })
-export class Timing implements OnInit {
+export class Timing implements OnInit, OnDestroy {
   settingsService = inject(SettingsService);
   settings: any;
+  subscriptions: Subscription = new Subscription();
 
   constructor() {}
   ngOnInit(): void {
     this.settings = this.settingsService.fetchSettings();
+    this.subscriptions.add(
+      this.settingsService.settings$.subscribe((settings) => {
+        this.settings = settings;
+      })
+    );
+  }
+
+  ngOnDestroy(): void {
+    this.subscriptions.unsubscribe();
   }
 
   calculateTimingBlocks() {
@@ -30,6 +42,7 @@ export class Timing implements OnInit {
     return blocks;
   }
   private parseTime(time: string): number {
+    console.log(time);
     const [hours, minutes] = time.split(':').map(Number);
     return hours * 60 + minutes;
   }

@@ -9,11 +9,13 @@ export class SettingsService {
   // Convert the signal to an Observable
 
   private platformId = inject(PLATFORM_ID);
+  settings$ = new Subject<any>();
 
   saveSettings(settings: any) {
     // Save settings logic here
     if (isPlatformBrowser(this.platformId)) {
       localStorage.setItem('settings', JSON.stringify(settings));
+      this.settings$.next(settings);
     }
   }
 
@@ -24,5 +26,8 @@ export class SettingsService {
         ? JSON.parse(settings)
         : { focusDurationGoal: 8, timeBlockDuration: 5, startAt: '7:00', endAt: '22:00' };
     }
+
+    // fallback for SSR or non-browser platforms
+    return { focusDurationGoal: 8, timeBlockDuration: 5, startAt: '7:00', endAt: '22:00' };
   }
 }
