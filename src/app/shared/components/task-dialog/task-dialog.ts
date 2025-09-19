@@ -48,21 +48,22 @@ export class TaskDialog {
       description: new FormControl('', { nonNullable: true, validators: Validators.required }),
     });
     this.dialogService.visible$.subscribe((visible) => {
-      if (visible.type === 'task') {
+      if (visible.type === 'task' || visible.type === null) {
         this.visible = visible.isVisible;
       }
     });
   }
 
   onSubmit() {
-    console.log(this.taskForm);
     if (this.taskForm.invalid) return;
+    console.log(this.taskForm);
     this.tasksService.addTask({
       id: this.tasksService.tasks().length + 1 + '',
       title: this.taskForm.value.title as string,
       duration: this.taskForm.value.duration as Date,
       description: this.taskForm.value.description as string,
     });
+    this.dialogService.closeDialog();
   }
 
   minutesMultipleOf5Validator(control: AbstractControl): ValidationErrors | null {

@@ -45,7 +45,7 @@ export class SettingsDialog implements OnDestroy, OnInit {
   constructor() {
     this.subscriptions.add(
       this.dialogService.visible$.subscribe((visible) => {
-        if (visible.type === 'settings') {
+        if (visible.type === 'settings' || visible.type === null) {
           this.visible = visible.isVisible;
         }
       })
