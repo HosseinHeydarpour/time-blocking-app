@@ -20,6 +20,7 @@ export class Timing implements OnInit, OnDestroy {
     this.subscriptions.add(
       this.settingsService.settings$.subscribe((settings) => {
         this.settings = settings;
+        this.calculateTimingBlocks();
       })
     );
   }
@@ -30,19 +31,19 @@ export class Timing implements OnInit, OnDestroy {
 
   calculateTimingBlocks() {
     const { startAt, endAt, timeBlockDuration } = this.settings;
+    console.log(startAt, endAt, timeBlockDuration);
 
     const start = this.parseTime(startAt); // in minutes
     const end = this.parseTime(endAt); // in minutes
     const blocks: string[] = [];
 
-    for (let time = start; time < end; time += timeBlockDuration) {
+    for (let time = start; time <= end; time += Number(timeBlockDuration)) {
       blocks.push(this.formatTime(time));
     }
 
     return blocks;
   }
   private parseTime(time: string): number {
-    console.log(time);
     const [hours, minutes] = time.split(':').map(Number);
     return hours * 60 + minutes;
   }
