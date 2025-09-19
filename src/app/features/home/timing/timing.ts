@@ -31,7 +31,6 @@ export class Timing implements OnInit, OnDestroy {
 
   calculateTimingBlocks() {
     const { startAt, endAt, timeBlockDuration } = this.settings;
-    console.log(startAt, endAt, timeBlockDuration);
 
     const start = this.parseTime(startAt); // in minutes
     const end = this.parseTime(endAt); // in minutes
