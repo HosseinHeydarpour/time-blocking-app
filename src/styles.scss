@@ -5,6 +5,10 @@
 
 @import url('./app/shared/styles/_icons.scss');
 
+html.dark body {
+  @apply bg-gray-900 text-gray-100; /* dark mode override */
+}
+
 *,
 *::after,
 *::before {

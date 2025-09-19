@@ -1,30 +1,42 @@
 <div class="container mx-auto">
   <section class="home px-6 mt-6">
     <div
-      class="bg-white rounded-lg border border-solid border-gray-100 py-2 px-4 flex items-center justify-between hadow-sm"
+      class="flex items-center justify-between p-3 rounded-lg border shadow-sm bg-white text-gray-900 surface-card dark:bg-gray-800 dark:text-gray-100"
     >
-      <p class="flex items-center gap-2 justify-center text-blue-950 text-md">
-        <i class="icon-calendar text-blue-700"></i>
+      <!-- Date Section -->
+      <p class="flex items-center gap-2 text-md">
+        <i class="pi pi-calendar text-primary"></i>
         Today -
-        <span class="">{{ today | date : 'short' }}</span>
+        <span>{{ today | date : 'short' }}</span>
       </p>
 
+      <!-- Actions -->
       <div class="flex items-center gap-2">
-        <a
-          class="bg-blue-50 p-1 rounded-full flex items-center justify-center hover:bg-blue-100"
+        <!-- Theme Toggle -->
+        <button
+          pButton
+          type="button"
+          class="flex items-center justify-center p-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors duration-200"
           (click)="themeService.toggleDarkMode()"
         >
           <i
-            class="text-blue-700"
+            class=""
             [ngClass]="{
               'icon-moon': isNightMode(),
               'icon-sun': !isNightMode()
             }"
+            class="text-primary"
           ></i>
-        </a>
-        <a class="bg-blue-50 p-1 rounded-full flex items-center justify-center hover:bg-blue-100">
-          <i class="icon-settings text-blue-700"></i>
-        </a>
+        </button>
+
+        <!-- Settings -->
+        <button
+          pButton
+          type="button"
+          class="flex items-center justify-center p-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors duration-200"
+        >
+          <i class="icon-settings text-primary"></i>
+        </button>
       </div>
     </div>
 
@@ -32,10 +44,12 @@
     @if (eventsList.length === 0) {
 
     <div
-      class="bg-white rounded-lg border border-solid border-gray-100 shadow-sm py-4 px-4 flex items-center justify-center mt-4 cursor-pointer"
+      class="bg-white rounded-lg border border-solid border-gray-100 shadow-sm py-4 px-4 flex items-center justify-center mt-4 cursor-pointer dark:bg-gray-800 dark:text-gray-100"
       (click)="showTaskDialog()"
     >
-      <p class="text-gray-500 text-center">No events scheduled for today 😞 Click to add one!</p>
+      <p class="text-gray-500 dark:text-gray-100 text-center">
+        No events scheduled for today 😞 Click to add one!
+      </p>
     </div>
     }
   </section>
