@@ -1,6 +1,7 @@
 import {
   AfterViewInit,
   Component,
+  computed,
   effect,
   ElementRef,
   inject,
@@ -33,11 +34,7 @@ export class Timing implements OnInit, OnDestroy, AfterViewInit {
 
   @ViewChildren('listItem') listItems!: QueryList<ElementRef>;
 
-  constructor() {
-    effect(() => {
-      this.tasks = this.processTasks();
-    });
-  }
+  constructor() {}
   ngOnInit(): void {
     this.settings = this.settingsService.fetchSettings();
     this.subscriptions.add(
@@ -46,8 +43,10 @@ export class Timing implements OnInit, OnDestroy, AfterViewInit {
         this.calculateTimingBlocks();
       })
     );
+    this.tasks = this.taskService.tasks();
   }
   ngAfterViewInit(): void {
+    this.processTasks();
     this.assignTasks();
   }
 
@@ -82,17 +81,16 @@ export class Timing implements OnInit, OnDestroy, AfterViewInit {
   }
 
   private processTasks() {
-    console.log(this.taskService.tasks());
     const tasks = this.taskService.tasks().map((task) => {
-      console.log(task, task.duration);
       const taskDuration = this.taskService.durationToMinutes(task.duration);
       if (taskDuration === 0) return;
+
       return {
         task: task.title,
         duration: taskDuration,
       };
     });
-    if (this.listItems) this.assignTasks();
+    this.tasks = tasks;
     return tasks;
   }
 
@@ -101,6 +99,8 @@ export class Timing implements OnInit, OnDestroy, AfterViewInit {
       item.nativeElement.classList.remove('taken');
       item.nativeElement.style.backgroundColor = '';
     });
+
+    console.log(this.tasks);
 
     this.tasks.forEach((task) => {
       const blocksNeeded = Math.ceil(task.duration / this.settings.timeBlockDuration);
