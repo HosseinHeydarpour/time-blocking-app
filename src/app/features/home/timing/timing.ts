@@ -83,7 +83,6 @@ export class Timing implements OnInit, OnDestroy {
   }
 
   assignTasks() {
-    console.log('ASSIGN CALLED');
     const takenBlocks: Set<number> = new Set(); // track used blocks
 
     console.log(this.listItems);
@@ -96,25 +95,56 @@ export class Timing implements OnInit, OnDestroy {
       const blocksNeeded = Math.ceil(task.duration / this.settings.timeBlockDuration);
 
       let assigned = 0;
+      let bgColor = this.getRandomColor();
+      let textColor = this.getContrastTextColor(bgColor);
       this.listItems.forEach((item, index) => {
-        if (assigned >= blocksNeeded) return; // done for this task
+        if (assigned >= blocksNeeded) {
+          bgColor = '';
+          textColor = '';
+          return;
+        } // done for this task
         if (!takenBlocks.has(index)) {
           takenBlocks.add(index);
           assigned++;
           item.nativeElement.classList.add('taken');
-          item.nativeElement.style.backgroundColor = this.getRandomColor();
+          item.nativeElement.style.backgroundColor = bgColor;
           item.nativeElement.textContent = `${task.task} - ${task.duration} minutes`;
+          item.nativeElement.style.color = `${textColor}`;
         }
       });
     });
   }
 
   getRandomColor() {
-    const letters = '0123456789ABCDEF';
-    let color = '#';
-    for (let i = 0; i < 6; i++) {
-      color += letters[Math.floor(Math.random() * 16)];
-    }
-    return color;
+    const colors = [
+      '#6366F1', // indigo-500
+      '#8B5CF6', // violet-500
+      '#EC4899', // pink-500
+      '#14B8A6', // teal-500
+      '#22C55E', // green-500
+      '#3B82F6', // blue-500
+      '#0EA5E9', // sky-500
+      '#F59E0B', // amber-500
+      '#EAB308', // yellow-500
+      '#84CC16', // lime-500
+    ];
+
+    const randomIndex = Math.floor(Math.random() * colors.length);
+    return colors[randomIndex];
+  }
+
+  getContrastTextColor(hex: string) {
+    // Remove #
+    hex = hex.replace('#', '');
+
+    // Convert to RGB
+    const r = parseInt(hex.substring(0, 2), 16);
+    const g = parseInt(hex.substring(2, 4), 16);
+    const b = parseInt(hex.substring(4, 6), 16);
+
+    // Calculate luminance (per W3C)
+    const luminance = (0.299 * r + 0.587 * g + 0.114 * b) / 255;
+
+    return luminance > 0.5 ? '#000000' : '#FFFFFF';
   }
 }
