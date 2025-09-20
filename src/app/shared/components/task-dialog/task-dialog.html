@@ -2,7 +2,7 @@
   header="Create a Task"
   [modal]="true"
   [(visible)]="visible"
-  [style]="{ maxWidth: '30rem' }"
+  [style]="{ maxWidth: 'max-content', marginRight: '40px', marginLeft: '40px' }"
   [dismissableMask]="true"
 >
   <form [formGroup]="taskForm" (ngSubmit)="onSubmit()">

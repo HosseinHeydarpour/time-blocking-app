@@ -1,7 +1,7 @@
 <div class="container mx-auto">
   <section class="home px-6 mt-6">
     <div
-      class="flex items-center justify-between p-3 rounded-lg border shadow-sm bg-white text-gray-900 surface-card dark:bg-gray-800 dark:text-gray-100"
+      class="flex items-center justify-between p-3 rounded-lg border border-solid border-gray-300 dark:border-gray-600 shadow-sm bg-white text-gray-900 surface-card dark:bg-gray-800 dark:text-gray-100"
     >
       <!-- Date Section -->
       <p class="flex items-center gap-2 text-md">
@@ -54,10 +54,10 @@
     @if (taskService.tasks().length === 0) {
 
     <div
-      class="bg-white rounded-lg border border-solid border-gray-100 shadow-sm py-4 px-4 flex items-center justify-center mt-4 cursor-pointer dark:bg-gray-800 dark:text-gray-100"
+      class="bg-white rounded-lg border border-solid border-gray-300 dark:border-gray-600 shadow-sm py-4 px-4 flex items-center justify-center mt-4 cursor-pointer dark:bg-gray-800 dark:text-gray-100"
       (click)="showTaskDialog()"
     >
-      <p class="text-gray-500 dark:text-gray-100 text-center">
+      <p class="text-gray-500 dark:text-gray-100 text-center tx-xs md:text-sm">
         No tasks scheduled for today 😞 Click to add one!
       </p>
     </div>
