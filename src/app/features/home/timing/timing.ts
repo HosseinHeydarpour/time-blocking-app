@@ -1,18 +1,20 @@
 import {
+  AfterViewInit,
   Component,
   effect,
   ElementRef,
   inject,
   OnDestroy,
   OnInit,
+  PLATFORM_ID,
   QueryList,
   ViewChildren,
 } from '@angular/core';
 import { SettingsService } from '../../../core/services/settings-service';
-import { Subscription } from 'rxjs';
+import { Subscription, take } from 'rxjs';
 import { CLIENT_RENEG_LIMIT } from 'tls';
 import { TaskService } from '../../../core/services/task-service';
-import { CommonModule } from '@angular/common';
+import { CommonModule, isPlatformBrowser } from '@angular/common';
 
 @Component({
   selector: 'app-timing',
@@ -20,26 +22,20 @@ import { CommonModule } from '@angular/common';
   templateUrl: './timing.html',
   styleUrl: './timing.scss',
 })
-export class Timing implements OnInit, OnDestroy {
+export class Timing implements OnInit, OnDestroy, AfterViewInit {
   settingsService = inject(SettingsService);
   settings: any;
   subscriptions: Subscription = new Subscription();
   taskService = inject(TaskService);
-  tasks: any[] = [];
+  tasks!: any[];
+  takenBlocks: Set<number> = new Set();
+  platoformID = inject(PLATFORM_ID);
 
   @ViewChildren('listItem') listItems!: QueryList<ElementRef>;
 
   constructor() {
     effect(() => {
-      this.tasks = this.taskService.tasks().map((task) => {
-        const taskDuration = this.taskService.durationToMinutes(task.duration);
-        return {
-          task: task.title,
-          duration: taskDuration,
-        };
-      });
-      console.log(this.tasks);
-      if (this.listItems) this.assignTasks();
+      this.tasks = this.processTasks();
     });
   }
   ngOnInit(): void {
@@ -50,6 +46,9 @@ export class Timing implements OnInit, OnDestroy {
         this.calculateTimingBlocks();
       })
     );
+  }
+  ngAfterViewInit(): void {
+    this.assignTasks();
   }
 
   ngOnDestroy(): void {
@@ -82,10 +81,22 @@ export class Timing implements OnInit, OnDestroy {
     return `${hours}:${minutes}`;
   }
 
-  assignTasks() {
-    const takenBlocks: Set<number> = new Set(); // track used blocks
+  private processTasks() {
+    console.log(this.taskService.tasks());
+    const tasks = this.taskService.tasks().map((task) => {
+      console.log(task, task.duration);
+      const taskDuration = this.taskService.durationToMinutes(task.duration);
+      if (taskDuration === 0) return;
+      return {
+        task: task.title,
+        duration: taskDuration,
+      };
+    });
+    if (this.listItems) this.assignTasks();
+    return tasks;
+  }
 
-    console.log(this.listItems);
+  assignTasks() {
     this.listItems.forEach((item) => {
       item.nativeElement.classList.remove('taken');
       item.nativeElement.style.backgroundColor = '';
@@ -103,8 +114,8 @@ export class Timing implements OnInit, OnDestroy {
           textColor = '';
           return;
         } // done for this task
-        if (!takenBlocks.has(index)) {
-          takenBlocks.add(index);
+        if (!this.takenBlocks.has(index)) {
+          this.takenBlocks.add(index);
           assigned++;
           item.nativeElement.classList.add('taken');
           item.nativeElement.style.backgroundColor = bgColor;
@@ -113,6 +124,8 @@ export class Timing implements OnInit, OnDestroy {
         }
       });
     });
+
+    this.taskService.persistTasks();
   }
 
   getRandomColor() {
