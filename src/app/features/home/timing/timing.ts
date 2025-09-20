@@ -67,6 +67,7 @@ export class Timing implements OnInit, OnDestroy, AfterViewInit {
 
     return blocks;
   }
+
   private parseTime(time: string): number {
     const [hours, minutes] = time.split(':').map(Number);
     return hours * 60 + minutes;
@@ -99,8 +100,6 @@ export class Timing implements OnInit, OnDestroy, AfterViewInit {
       item.nativeElement.classList.remove('taken');
       item.nativeElement.style.backgroundColor = '';
     });
-
-    console.log(this.tasks);
 
     this.tasks.forEach((task) => {
       const blocksNeeded = Math.ceil(task.duration / this.settings.timeBlockDuration);
