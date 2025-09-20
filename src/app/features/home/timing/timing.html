@@ -5,10 +5,10 @@
     >
       <span class="flex items-center gap-2">
         <div class="w-4 h-4 bg-green-500 rounded-full animate-pulse"></div>
-        {{ calculateTimingBlocks().length }} Slots
+        {{ timeBlocks.length }} Slots
       </span>
     </li>
-    @for (block of calculateTimingBlocks(); track $index) {
+    @for (block of timeBlocks; track $index) {
     <li
       class="border-b border-solid border-gray-200 py-4 text-gray-500 dark:text-gray-100 dark:border-gray-600 font-semibold cursor-pointer hover:bg-gray-100 hover:dark:bg-gray-500 px-4 transition-all duration-150"
       #listItem

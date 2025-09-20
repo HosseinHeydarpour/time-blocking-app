@@ -29,12 +29,24 @@ export class Timing implements OnInit, OnDestroy, AfterViewInit {
   subscriptions: Subscription = new Subscription();
   taskService = inject(TaskService);
   tasks!: any[];
+  proccessedTasks?: any[];
   takenBlocks: Set<number> = new Set();
   platoformID = inject(PLATFORM_ID);
+  timeBlocks: string[] = [];
 
   @ViewChildren('listItem') listItems!: QueryList<ElementRef>;
 
-  constructor() {}
+  constructor() {
+    effect(() => {
+      this.tasks = this.taskService.tasks();
+      this.processTasks();
+      // wait until the next microtask (after DOM update)
+      setTimeout(() => {
+        this.assignTasks();
+        this.calculateTimingBlocks();
+      });
+    });
+  }
   ngOnInit(): void {
     this.settings = this.settingsService.fetchSettings();
     this.subscriptions.add(
@@ -46,7 +58,6 @@ export class Timing implements OnInit, OnDestroy, AfterViewInit {
     this.tasks = this.taskService.tasks();
   }
   ngAfterViewInit(): void {
-    this.processTasks();
     this.assignTasks();
   }
 
@@ -65,7 +76,7 @@ export class Timing implements OnInit, OnDestroy, AfterViewInit {
       blocks.push(this.formatTime(time));
     }
 
-    return blocks;
+    this.timeBlocks = blocks;
   }
 
   private parseTime(time: string): number {
@@ -82,7 +93,7 @@ export class Timing implements OnInit, OnDestroy, AfterViewInit {
   }
 
   private processTasks() {
-    const tasks = this.taskService.tasks().map((task) => {
+    const proccessedTasks = this.taskService.tasks().map((task) => {
       const taskDuration = this.taskService.durationToMinutes(task.duration);
       if (taskDuration === 0) return;
 
@@ -91,39 +102,43 @@ export class Timing implements OnInit, OnDestroy, AfterViewInit {
         duration: taskDuration,
       };
     });
-    this.tasks = tasks;
-    return tasks;
+    this.proccessedTasks = proccessedTasks;
+
+    return proccessedTasks;
   }
 
   assignTasks() {
-    this.listItems.forEach((item) => {
+    this.listItems.forEach((item, index) => {
       item.nativeElement.classList.remove('taken');
       item.nativeElement.style.backgroundColor = '';
+      item.nativeElement.textContent = this.timeBlocks[index];
+      item.nativeElement.style.color = 'white';
     });
 
-    this.tasks.forEach((task) => {
-      const blocksNeeded = Math.ceil(task.duration / this.settings.timeBlockDuration);
+    if (this.proccessedTasks?.length) {
+      this.proccessedTasks?.forEach((task) => {
+        const blocksNeeded = Math.ceil(task.duration / this.settings.timeBlockDuration);
 
-      let assigned = 0;
-      let bgColor = this.getRandomColor();
-      let textColor = this.getContrastTextColor(bgColor);
-      this.listItems.forEach((item, index) => {
-        if (assigned >= blocksNeeded) {
-          bgColor = '';
-          textColor = '';
-          return;
-        } // done for this task
-        if (!this.takenBlocks.has(index)) {
-          this.takenBlocks.add(index);
-          assigned++;
-          item.nativeElement.classList.add('taken');
-          item.nativeElement.style.backgroundColor = bgColor;
-          item.nativeElement.textContent = `${task.task} - ${task.duration} minutes`;
-          item.nativeElement.style.color = `${textColor}`;
-        }
+        let assigned = 0;
+        let bgColor = this.getRandomColor();
+        let textColor = this.getContrastTextColor(bgColor);
+        this.listItems.forEach((item, index) => {
+          if (assigned >= blocksNeeded) {
+            bgColor = '';
+            textColor = '';
+            return;
+          } // done for this task
+          if (!this.takenBlocks.has(index)) {
+            this.takenBlocks.add(index);
+            assigned++;
+            item.nativeElement.classList.add('taken');
+            item.nativeElement.style.backgroundColor = bgColor;
+            item.nativeElement.textContent = `${task.task} - ${task.duration} minutes`;
+            item.nativeElement.style.color = `${textColor}`;
+          }
+        });
       });
-    });
-
+    }
     this.taskService.persistTasks();
   }
 
