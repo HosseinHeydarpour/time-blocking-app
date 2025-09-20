@@ -27,6 +27,11 @@ export class TaskService {
     this.persistTasks();
   }
 
+  deleteAll() {
+    this.tasks.set([]);
+    this.persistTasks();
+  }
+
   durationToMinutes(duration: Date): number {
     let time = duration;
     if (typeof duration === 'string') time = new Date(duration);

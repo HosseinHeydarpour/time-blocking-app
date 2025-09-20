@@ -38,11 +38,20 @@
         >
           <i class="pi pi-cog text-primary"></i>
         </button>
+
+        <button
+          pButton
+          type="button"
+          class="flex items-center justify-center p-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors duration-200"
+          (click)="onDeleteTasksClicked()"
+        >
+          <i class="pi pi-trash text-primary"></i>
+        </button>
       </div>
     </div>
 
     <!-- No event Scheduled message -->
-    @if (tasksList.length === 0) {
+    @if (taskService.tasks().length === 0) {
 
     <div
       class="bg-white rounded-lg border border-solid border-gray-100 shadow-sm py-4 px-4 flex items-center justify-center mt-4 cursor-pointer dark:bg-gray-800 dark:text-gray-100"
@@ -52,6 +61,13 @@
         No tasks scheduled for today 😞 Click to add one!
       </p>
     </div>
+    } @else {
+    <div
+      class="bg-white rounded-lg border border-solid border-gray-100 shadow-sm py-4 px-4 flex items-center justify-center mt-4 cursor-pointer dark:bg-gray-800 dark:text-gray-100"
+      (click)="showTaskDialog()"
+    >
+      <p class="text-gray-500 dark:text-gray-100 text-center">Add More Tasks!</p>
+    </div>
     }
     <app-timing></app-timing>
   </section>
@@ -59,3 +75,4 @@
 
 <app-task-dialog></app-task-dialog>
 <app-settings-dialog></app-settings-dialog>
+<app-delete-dialog></app-delete-dialog>

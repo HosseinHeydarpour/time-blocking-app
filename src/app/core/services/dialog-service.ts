@@ -2,7 +2,7 @@ import { Injectable, signal } from '@angular/core';
 import { toObservable } from '@angular/core/rxjs-interop';
 import { Subject } from 'rxjs';
 
-export type DialogType = 'task' | 'settings';
+export type DialogType = 'task' | 'settings' | 'delete';
 @Injectable({
   providedIn: 'root',
 })

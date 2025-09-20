@@ -7,10 +7,11 @@ import { ThemeService } from '../../core/services/theme-service';
 import { SettingsDialog } from '../../shared/components/settings-dialog/settings-dialog';
 import { SettingsService } from '../../core/services/settings-service';
 import { Timing } from './timing/timing';
+import { DeleteDialog } from '../../shared/components/delete-dialog/delete-dialog';
 
 @Component({
   selector: 'app-home',
-  imports: [CommonModule, TaskDialog, SettingsDialog, Timing],
+  imports: [CommonModule, TaskDialog, SettingsDialog, Timing, DeleteDialog],
   templateUrl: './home.html',
   styleUrl: './home.scss',
 })
@@ -24,11 +25,13 @@ export class Home {
 
   isNightMode = computed(() => this.themeService.theme() === 'dark');
 
-  tasksList = computed(() => this.taskService.tasks());
-
   constructor() {}
 
   showTaskDialog() {
     this.dialogService.openDialog('task');
+  }
+
+  onDeleteTasksClicked() {
+    this.dialogService.openDialog('delete');
   }
 }
